@@ -14,4 +14,5 @@ https://ww1.microchip.com/downloads/en/DeviceDoc/MEC172x-Errata-80000913B.pdf
 MEC172x PCB Layout Guide
 http://ww1.microchip.com/downloads/en/Appnotes/AN3759-Application-Note-DS00003759A.pdf
 
-
+CEC1x02 Development Board User Guide includes schematic
+https://ww1.microchip.com/downloads/en/DeviceDoc/CEC1x02-Development-Board-Users-Guide-DS50002727A.pdf
