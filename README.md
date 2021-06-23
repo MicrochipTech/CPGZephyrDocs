@@ -3,3 +3,6 @@ Documents and some flash utilities for Microchip MEC family parts used in the Ze
 
 2021-06-022
 Add MEC172x evaluation board (EVB) schematic
+
+2021-06-23
+Add MEC152x SPI image generator for Windows
