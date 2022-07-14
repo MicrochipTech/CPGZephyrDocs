@@ -6,3 +6,6 @@ Add MEC172x evaluation board (EVB) schematic
 
 2021-06-23
 Add MEC152x SPI image generator for Windows
+
+2022-07-14
+Add MEC172x Modular Card Rev. B-1.1 schematic
