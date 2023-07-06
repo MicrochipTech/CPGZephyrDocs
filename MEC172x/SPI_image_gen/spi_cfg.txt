@@ -1,18 +1,30 @@
-; Everglades SPI Image Generator configuration file 
+; Carlsbad SPI Image Generator configuration file 
 [SPI]
 SPISizeMegabits = 128
-Flashmap = true
-FlshmapAddr = 0x800000
+Flashmap = false
+FlshmapAddr = 0
+KeyHashLoc = 0x1000 
+KeyHashLoc1 = 0x2000 
 
 [DEVICE]
 TagAddr0 = 0
 TagAddr1 = 0
 BoardID = 0x316
 
+[KEY "0"] 
+KeyHashoffset = 0
+ECDSAPvtKeyFile = Keys/ec384.pem 
+ECDSAPvtKeyPass = ec384 
+[KEY "1"] 
+KeyHashoffset = 1
+ECDSAPvtKeyFile = Keys/ec384.pem 
+ECDSAPvtKeyPass = ec384 
+
+
 [IMAGE "0"]
-ImageLocation = 0x2000
-SpiFreqMHz = 96
-SpiReadCommand = Quad
+ImageLocation = 0x20000
+SpiFreqMHz = 24
+SpiReadCommand = slow
 SpiDriveStrength = 4
 SpiSlewFast = false
 SpiSignalControl = 0x00
@@ -22,29 +34,63 @@ FwOffset = 0
 FwLoadAddress = 0xE0000
 FwEntryAddress = 0
 UseECDSA = true
-AuthenticateKeySelt = 5
+FwAuthtic = true
+AuthenticateKeySelt = 0
 AutoKeyRevEn = true
-KeyRevPermission = 0x11223344
-AutoRollBackProtEn = true
-RollbackProtPerm031000 = 0x11223344
-RollbackProtPerm063032 = 0x55667788
+KeyRevPermission = 0
+AutoRollBackProtEn = 0
+RollbackProtPerm031000 = 0
+RollbackProtPerm063032 = 0
 RollbackProtPerm095063 = 0
-RollbackProtPerm127096 = 0xDDEEFF99
-ECDSAPrivKeyFile = ec384.pem
-ECDSAPrivKeyPassword = ec384
+RollbackProtPerm127096 = 0
+ECDSAPrivKeyFile = Keys/ECC384r.pem 
+ECDSAPrivKeyPassword = MCHPECC384r
 FwEncrypt = true
-AesGenECPubKeyFile = ec384_crt.pem
+AesGenECPubKeyFile =  Keys/ECC384r_crt.pem
 SHA256andECDSA = true
 TagBuildNumber= 0x1156
-Comp0ProgDrvStrenEN = true
-Comp0WritCmdTotByts = 1
-Comp0ReadCmdByte = 0x15    
-Comp0WritCmdByte = 0x11   
-Comp0DrvValue = 0x40       
-Comp0DrvMask = 0x60        
-Comp1ProgDrvStrenEN = true
-Comp1WritCmdTotByts = 1
-Comp1ReadCmdByte = 0x15
-Comp1WritCmdByte = 0x11    
-Comp1DrvValue = 0x20       
-Comp1DrvMask = 0x60
+Comp0ProgDrvStrenEN = false
+Comp0WritCmdTotByts = 0 
+Comp0ReadCmdByte = 0    
+Comp0WritCmdByte = 0   
+Comp0DrvValue = 0       
+Comp0DrvMask = 0        
+Comp1ProgDrvStrenEN = false
+Comp1WritCmdTotByts = 0
+Comp1ReadCmdByte = 0
+Comp1WritCmdByte = 0    
+Comp1DrvValue = 0       
+Comp1DrvMask = 0
+
+[IMAGE "1"]
+ImageLocation = 0x100000
+SpiFreqMHz = 24
+SpiReadCommand = slow
+SpiDriveStrength = 4
+SpiSlewFast = false
+SpiSignalControl = 0x00
+FwBinFile = blink_led.bin
+ImageRevision = 0x56
+FwOffset = 0
+FwLoadAddress = 0xE0000
+FwEntryAddress = 0
+UseECDSA = true
+FwAuthtic = true
+AuthenticateKeySelt = 5
+ECDSAPrivKeyFile =  Keys/ECC384r.pem 
+ECDSAPrivKeyPassword = MCHPECC384r
+FwEncrypt = true
+AesGenECPubKeyFile =  Keys/ECC384r_crt.pem
+TagBuildNumber= 0x8975
+Comp0ProgDrvStrenEN = false
+Comp0WritCmdTotByts = 0 
+Comp0ReadCmdByte = 0    
+Comp0WritCmdByte = 0   
+Comp0DrvValue = 0       
+Comp0DrvMask = 0        
+Comp1ProgDrvStrenEN = false
+Comp1WritCmdTotByts = 0
+Comp1ReadCmdByte = 0
+Comp1WritCmdByte = 0    
+Comp1DrvValue = 0       
+Comp1DrvMask = 0
