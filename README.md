@@ -12,3 +12,7 @@ Add MEC172x Modular Card Rev. B-1.1 schematic
 
 2023-07-6
 Update MEC172x SPI Image Generator to version 5.0 07-03-2023
+
+2025-03-11
+Add MEC174x documentation
+Add MEC175x documentation
