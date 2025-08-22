@@ -1,0 +1,297 @@
+﻿Usage Doc for the SPI Image generator 
+=====================================
+KENAI_FJORDS_SPI_GEN Version 4.1 2024-12-18
+
+SPI Image Utility - 
+    > Kenai_Fjords_RevB_spi_gen.exe 
+            -i <cfg_file_name> 
+                -o <output_spi_file_name> 
+                    -m <merge_file>
+
+Running "Kenai_Fjords_RevB_spi_gen.exe" from command prompt will take 
+    "spi_cfg.ini" as a default configuration file and 
+    generators the output "spi_image.bin"
+
+Other options:
+==============    
+    -i cfg_file_name 
+        Specifies the text config file for the SPI chip & images.
+        Defaults to spi_cfg.ini
+
+    -o output_spi_file_name
+        Specifies the SPI binary output file name.
+        Defaults to spi_image.bin
+
+    -m merge_file
+        Read merge file as an existing SPI binary image and create FW images 
+        inside it.
+        No default value
+
+        
+Configuration Details:
+======================        
+Kenai_Fjords SPI Image Generator configuration file 
+
+SPI Configuration:
+-----------------
+    [SPI]
+    ;SPI Flash Image SIze in Megabits 128 =>  16MB; 256 = 32 MB
+    SPISizeMegabits = 128
+    
+Device Configuration:
+--------------------
+    [DEVICE]
+    ; Device Select For RevA or RevB
+    ; Selection is A / B
+    DeviceSel = A / B
+    
+    ;Tag0 address for the image header to be located   
+    TagAddr0 = <hex value Byte>
+    
+    ;Tag1 address for the image header to be located   
+    TagAddr1 = <hex value Byte> 
+    
+    ; Device Paltform ID specifies the paltform intended for the code bring-up
+    BoardID = <hex value Word>
+    
+    ;ECDH2 Public key to decrypt the Image encryption Private key in efuse 
+    ;Output from the Efuse generator tool total 96 Bytes
+    DevECDH2Pubkey =  <Binary file . bin> 
+    
+    ;Key Hash Blob Base address for primary and fallback image
+    KeyHashBlobAddr0 = <Key hash Blob SPI address in Hex>
+    KeyHashBlobAddr1 = <Key hash Blob SPI address in Hex>
+    
+Image Details at Tag 0
+    [IMAGE "0"]
+    ;Noof Executable images present
+    NoofImages = 1 / 2
+        
+    ;Firmware Image1 Application binary image
+    IMG1BinFile = <Application Binary file . bin>
+    
+    ;Application Image1 firmware load address in SRAM
+    IMG1LoadAddress = <Load address in Hex>
+    
+    ;IMG1EntryAddress = the Entry(Reset) address pointer for the Firmware image
+    ; If the Filed is left empty the tool will fill in the entry\reset address 
+    ; from offset 0x4 of input Application binary which is the reset handler
+    IMG1EntryAddress = 0 or <Entry address in Hex if known>        
+    
+    ;Firmware Image2 Application binary image
+    IMG2BinFile = <Application Binary file . bin>
+        
+    ;Application Image2 firmware load address in SRAM
+    IMG2LoadAddress = <Load address in Hex>
+    
+    ;IMG2EntryAddress = the Entry(Reset) address pointer for the Firmware image
+    ; If the Filed is left empty the tool will fill in the entry\reset address 
+    ; from offset 0x4 of input Application binary which is the reset handler
+    IMG2EntryAddress = 0 or <Entry address in Hex if known>
+    
+    ;Image location in the SPI Flash
+    FwLocation = <Hex value Dword>
+    
+    ; FwOffset - the Offset to palce the image from the header 
+    ; 0 means append to the end of header. 
+    ; FW will be located at ImageLocation + FWOffset following the header
+    FwOffset = 0 or <Hex value Dword>    
+    
+    ; SPI read frequency supported 12 16 24 48 96 in Mhz
+    SpiFreqMHz = select any frequency from above 
+    
+    ; SPI Read mode configuration supported "slow" or "fast" or "dual" or "quad"
+    SpiReadCommand = slow / fast / dual / quad
+    
+    ; If need to send QUAD enable for the SPI quad command 0x6B for the SPI
+    ; component used.
+    EnSpiEQIOComp0 = false / true
+    EnSpiEQIOComp1 = false / true
+    
+    ; SPI pin drive strength: 2, 4, 8, or 12 mA
+    SpiDriveStrength = Select Drive strength from above list
+    
+    ; SPI pin slew rate slow(false) or fast (true)
+    SpiSlewFast = false / true
+
+    ; SPI Component 0 Flash enable programming for the Drive Strength udpate for 
+    Comp0ProgDrvStrenEN = false / true
+    
+    ; SPI Component 0 Flash Programming write command format 1 byte or 2 byte
+    Comp0WritCmdTotByts = 1 / 2
+    
+    ; SPI Component 0 Read Command for current Drive Strength Congifuration 
+    Comp0ReadCmdByte  = <Read Command SPI flash dependent>  
+    
+    ; SPI Component 0 Write Command to set desired Drive Strength Congifuration 
+    Comp0WritCmdByte = <Write Command SPI flash dependent>     
+    
+    ; SPI Component 0 is used to program desired drive strength bit value
+    Comp0DrvValue = 1 to 3 bits in a SPI Flash Configuration register    
+    
+    ; SPI Component 0 Mask value used to clear the current drive strength bit 
+    ; value, while preserving the other configuration bits
+    Comp0DrvMask = Drive strength Bit mask value
+    
+    ; SPI Component 1 Flash enable programming for the Drive Strength udpate for 
+    Comp1ProgDrvStrenEN = false / true
+    
+    ; SPI Component 0 Flash Programming write command format 1 byte or 2 byte
+    Comp1WritCmdTotByts = 1 / 2 
+    
+    ; SPI Component 0 Read Command for current Drive Strength Congifuration 
+    Comp1ReadCmdByte  = <Read Command SPI flash dependent>  
+    
+    ; SPI Component 0 Write Command to set desired Drive Strength Congifuration 
+    Comp1WritCmdByte = <Write Command SPI flash dependent>     
+    
+    ; SPI Component 0 is used to program desired drive strength bit value
+    Comp1DrvValue = 1 to 3 bits in a SPI Flash Configuration register    
+    
+    ; SPI Component 0 Mask value used to clear the current drive strength bit 
+    ; value, while preserving the other configuration bits
+    Comp1DrvMask = Drive strength Bit mask value
+
+    ; Control Image status reporting with header if feature enabled in efuse.
+    EnFallImgStsRept = false / true
+    
+    ; Enable Authentication of Header and Firmware FW 
+    ; Generate ECDSA signature of Header, if false instead of the signatures 
+    ; contain the SHA384 of(object)
+    UseECDSA = false / true
+    
+    ; Authentication Key selection - use the valid key index to be used from the 
+    ; key bank in the SPI. Valid Key select offset values  = 0 - 7
+    ; Value 0 - indicates Key select @ 0 offset 
+    AuthenticateKeySelt = <Key select offset>
+    
+    ; Auto Key revocation Enable to revoke the key bits in the OTP by Bootrom.
+    ; By default Auto Key revovation is disabled or false
+    AutoKeyRevEn = false / true
+    
+    ; Key revocation persmission. Each bit will represent to the corresponding 
+    ; Key offset and the permission to revoke them. Total supported keys = 8 per
+    ; Owner
+    KeyRevPermission = <Hex value DWord>
+    
+    ; Auto Roll Back protection enable bit. set to true \ false for the feature
+    ; Enable. Default is disable or false
+    AutoRollBackProtEn = false / true
+    
+    ; Roll Back Protection Permission to enable the feature. Total 128 images 
+    ; will be supported and each bit represent the particular version of image
+    ; RollbackProtPerm031000 - is for images 31 - 0
+    ; RollbackProtPerm063032 - is for images 32 - 63
+    ; RollbackProtPerm095063 - is for images 64 - 95
+    ; RollbackProtPerm127096 - is for images 96 - 127
+    ; All values are in hex DWord
+    RollbackProtPerm031000 = <Hex value DWord>
+    RollbackProtPerm063032 = <Hex value DWord>
+    RollbackProtPerm095063 = <Hex value DWord>
+    RollbackProtPerm127096 = <Hex value DWord>
+        
+    ; May be any value 16-byte field reserved for customer use only
+    ECFWCnfgInfoDW0 = <Hex value DWord>
+    ECFWCnfgInfoDW1 = <Hex value DWord>
+    ECFWCnfgInfoDW2 = <Hex value DWord>
+    ECFWCnfgInfoDW3 = <Hex value DWord>
+    
+    ; Tagx Build number of the Application
+    TagBuildNumber = <Hex value Word>
+    
+    ; Current Version of the image - Valid values are from  0 - 127 bit[6:0]
+    ImageRevision = <Currrent revision number>
+    
+    ; Active version number for the image. From two images tag0 and tag1, the 
+    ; highest version number will be considered as the primary image.
+    ActiveVersion = <Hex value Word>
+    
+    ; This EC key pair is used to sign and verify/authenticate the FW Image Header, 
+    ; FW + optional key header optional key header.
+    ; EC Private Key in PEM encoded Openssl SSLeay encrypted format
+    ; This key is used to sign the Header and is NOT stored in the MEC chip.
+    ECDSAPrivKeyFile = Authentication Key.pem 
+    ECDSAPrivKeyPassword = PASSWORD for the Private Key ( Optional)
+
+    ; Header Flag for verifying Authentication enable and Disable
+    ; if proper keys are programmed in efuse - this flag can enable or disable
+    ; authentication. If Authentication bit is set in Efuse this is don't care
+    FwAuthtic = false / true
+    
+    ;To Encrypt Application binary using AES-256-CBC
+    FwEncrypt = false / true
+    
+    ; FW may be AES-256-CBC encrypted
+    ; The key is auto-generated and exchanged with the ROM using a procedure 
+    ; based on ECDH.
+    ; An EC Public Key is used by this program to Generate the AES-256 Key/IV 
+    ; and a 96-byte key header appended to the encrypted FW binary. 
+    ; The corresponding EC Private key is stored in the MEC chip and is used by 
+    ; ROM to re-generated the AES-256 Key & IV.
+    AesGenECPubKeyFile = <Encryption Certificate file >
+        
+    ; Attestation Key may be AES-256-CBC encrypted
+    ; Rom uses this Public key and generate a run time private key to form the 
+    ; shared secret using a procedure based on ECDH and generate the AES-256 Key/IV 
+    ECDHAKKEKPubKeyFile = <ECC 384 Certificate file \ Public key file >
+    
+    ; Enable PQC Feature 
+    ; By default PQC feature is disabled, enable for PQC as an option
+    PQCFeatEnab = true / false	
+    
+    ; Verify EC firmware images using below algorithms, update the header byte
+    ; 0x - ECC - ECDSA only 
+    ; 10 - PQC - PQC only 
+    ; 11 - BOTH - ECC and PQC enabled
+    AuthAlgoSel = ECC \PQC \ BOTH
+    
+    ; PQC Authentication Key selection - use the valid key index to be used from the 
+    ; key bank in the SPI. Valid Key select offset values  = 0 - 31
+    ; Value 0 - indicates Key select @ 0 offset of PQC hash 
+    PQCvrfyKeySelt = <Key select offset>
+    
+    ; PQC Key x Revocation Permission bit each bit corresponding to the key select 0 -31
+    PQCkeyRevokPerm  = <Hex value DWord>
+    
+    ; PQC Public key for Header
+    PQCPubKeyFile = PQC Public key file  Key.pub
+    
+    ; Only for Dilithium selection for Public key selection Normal or Expanded
+    PQCDlSignSel = N / E
+    
+    ; PQC Public Key size in units bytes 
+    PQCpubKeySze = <Hex value DWord>
+    
+    ; PQC signature file size in units bytes 
+    PQCsignatSze = <Hex value DWord>
+    
+    ;MCHP Dual signature enable
+    UseMCHPECDSA = false / true
+    
+    ;If Dual signature is enabled provide the key and password for the keys
+    MCHPECDSAPrivKeyFile = Signature Private Key.pem 
+    MCHPECDSAPrivKeyPassword = PASSWORD for the Private Key ( optional)
+    
+    ;Device IK Private key source
+    ; value 0=PUF Generated DevIKpriv
+    ;       1=OTP Provisioned DevIKpriv
+    DevIKSrcSel = 0 / 1
+    
+    ;Device AK Private key source select
+    ; value 0=PUF Generated DevAKpriv
+    ;       1=OTP Provisioned DevAKpriv
+    DevAKSrcSel = 0 / 1
+    
+    ;Device Attestation Certificate generation if value 
+    ; value = 0 End Certificate
+    ;       = 1 CA certificate
+    ;       = 2 Both End and CA Certificate
+    ;       = 3 No Certificate generation
+    DevAKCertSel = 0 / 1 / 2 / 3
+    
+    ;If Second Loader API image need to be supported in theimage generation
+    ; Set the flag = false/true for the image genearion - default = false   
+    SecdLdrImgGen = false / true
+¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+                                E.N.D  O.F  D.O.C.U.M.E.N.T
+¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
